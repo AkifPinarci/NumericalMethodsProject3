@@ -1,31 +1,25 @@
 public class project3 {
     public static void main(String[] args) {
-        bisection(0, 0.5, 1);
-        bisection(0.5, 2, 1);
-        bisection(2, 4, 1);
-        secant(0, 1);
-        // secant(1, 1);
-        secant(2, 1);
-        // secant(3, 1);
-        secant(4, 1);
-        false_position(0, 0.5, 1);
-        false_position(0.5, 2, 1);
-        false_position(2, 4, 1);
-        modifiedSecant(0.5, 1);
+        // bisection(0, 0.5, 1);
+        // bisection(0.5, 2, 1);
+        // bisection(2, 4, 1);
+        // secant(0, 1);
+        // secant(2, 1);
+        // secant(4, 1);
+        // false_position(0, 0.5, 1);
+        // false_position(0.5, 2, 1);
+        // false_position(2, 4, 1);
+        // modifiedSecant(0.5, 1);
         modifiedSecant(1.5, 1);
-        // modifiedSecant(2.5, 1);
-        modifiedSecant(3.5, 1);
-        // newton_raphson(0.0, 1);
-        newton_raphson(1.0, 1);
-        newton_raphson(2.0, 1);
-        newton_raphson(3.0, 1);
-        // newton_raphson(4.0, 1);
-        bisection(120, 140, 2);
-        secant(120, 2);
-        false_position(120, 140, 2);
-        modifiedSecant(120, 2);
-        newton_raphson(120, 2);
-        System.out.println("Check if it works!");
+        // modifiedSecant(3.5, 1);
+        // newton_raphson(1.0, 1);
+        // newton_raphson(2.0, 1);
+        // newton_raphson(3.0, 1);
+        // bisection(120, 140, 2);
+        // secant(120, 2);
+        // false_position(120, 140, 2);
+        // modifiedSecant(120, 2);
+        // newton_raphson(120, 2);
     }
 
     public static double cosh(double x) {
@@ -80,6 +74,8 @@ public class project3 {
 
     public static void bisection(double a, double b, int problem) {
         double c = (a + b) / 2;
+        double cn = 0;
+        double error;
         int count = 0;
         while (count < 101) {
             if ((evalPoly(a, problem) * evalPoly(c, problem)) > 0) {
@@ -87,9 +83,12 @@ public class project3 {
             } else {
                 b = c;
             }
+            cn = c;
             c = (a + b) / 2;
+            error = (c-cn)/c;
+            System.out.println("Error: " + error);
             // System.out.println(") Error: "+ evalPoly(c, problem));
-            if (Math.abs(evalPoly(c, problem)) < 0.001) {
+            if (Math.abs(error) < 0.001) {
                 System.out.println("Solution: " + c);
                 break;
             }
@@ -100,9 +99,13 @@ public class project3 {
     public static void secant(double x0, int problem) {
         int count = 0;
         double xi = x0 + 0.1;
+        double error;
         double temp;
         while (count < 101) {
-            if (Math.abs(evalPoly(xi, problem)) < 0.001) {
+
+            error = (xi - x0)/xi;
+            System.out.println("Error: " + error);
+            if (Math.abs(error) < 0.001) {
                 System.out.println("Solution: " + xi);
                 break;
             } else {
@@ -121,22 +124,29 @@ public class project3 {
         double xii = xi
                 - evalPoly(xi, problem) * ((delta * xi) / (evalPoly(xi + delta * xi, problem) - evalPoly(xi, problem)));
         double temp;
+        double error = 1;
         while (count < 101) {
-            if (Math.abs(evalPoly(xi, problem)) < 0.001) {
-                System.out.println("Solution: " + xi);
+            if(error != 0) {
+                System.out.println("Error: " + error);
+            }
+            if (Math.abs(error) < 0.001 && error != 0) {
+                System.out.println("Solution: " + xii);
                 break;
             } else {
                 temp = xii;
                 xii = xi - evalPoly(xi, problem)
-                        * ((delta * xi) / (evalPoly(xi + delta * xi, problem) - evalPoly(xi, problem)));
+                * ((delta * xi) / (evalPoly(xi + delta * xi, problem) - evalPoly(xi, problem)));
                 xi = temp;
             }
+            error = (xii - xi)/xii;
             count++;
         }
     }
 
     public static void false_position(double a, double b, int problem) {
         double c = (b - evalPoly(b, problem) * ((a - b) / (evalPoly(a, problem) - evalPoly(b, problem))));
+        double cn = 0;
+        double error;
         int count = 0;
         while (count < 101) {
             if ((evalPoly(a, problem) * evalPoly(c, problem)) > 0) {
@@ -144,9 +154,11 @@ public class project3 {
             } else {
                 b = c;
             }
-            c = (a + b) / 2;
-            // System.out.println(") Error: "+ evalPoly(c, problem));
-            if (Math.abs(evalPoly(c, problem)) < 0.001) {
+            cn = c;
+            c = (b - evalPoly(b, problem) * ((a - b) / (evalPoly(a, problem) - evalPoly(b, problem))));
+            error = (c-cn)/c;
+            System.out.println("Error: "+ error);
+            if (Math.abs(error) < 0.001) {
                 System.out.println("Solution: " + c);
                 break;
             }
@@ -157,14 +169,19 @@ public class project3 {
     public static void newton_raphson(double xi, int problem) {
         int count = 0;
         double temp;
+        double error = 1;
         double xii = xi - (evalPoly(xi, problem) / evalDerivative(xi, problem));
         while (count < 101) {
-            if (Math.abs(evalPoly(xi, problem)) < 0.001) {
+            error = (xii-xi)/xii; 
+            if(error != 0){
+                System.out.println("Error: "+ error);
+            }
+            if (Math.abs(error) < 0.001 && error != 0) {
                 System.out.println("Solution: " + xi);
                 break;
             } else {
-                xii = xi - ((evalPoly(xi, problem)) / (evalDerivative(xi, problem)));
                 temp = xii;
+                xii = xi - ((evalPoly(xi, problem)) / (evalDerivative(xi, problem)));
                 xi = temp;
             }
             count++;
