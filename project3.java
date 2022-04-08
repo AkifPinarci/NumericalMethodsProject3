@@ -20,6 +20,7 @@ public class project3 {
         // false_position(120, 140, 2);
         // modifiedSecant(120, 2);
         // newton_raphson(120, 2);
+        System.out.println("Error: ");
     }
 
     public static double cosh(double x) {
